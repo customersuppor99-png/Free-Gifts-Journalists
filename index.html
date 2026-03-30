@@ -3,168 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সাংবাদিক সম্মাননা ও পুরস্কার বিতরণী</title>
+    <title>সাংবাদিক ডিজিটাল পোর্টাল ও রিওয়ার্ড সিস্টেম</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; background: radial-gradient(circle at center, #001f3f, #000); color: white; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-glow { box-shadow: 0 0 15px #ffd700; border: 2px solid #ffd700; }
-        .typing-effect { border-right: 3px solid #ffd700; white-space: nowrap; overflow: hidden; animation: typing 3s steps(30, end), blink .75s step-end infinite; }
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink { from, to { border-color: transparent } 50% { border-color: #ffd700 } }
+        body { font-family: 'Hind Siliguri', sans-serif; background: #000428; color: white; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; transition: 0.4s; }
+        .glass-card:hover { transform: translateY(-10px); border-color: #FFD700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2); }
+        .neon-text { text-shadow: 0 0 10px #FFD700; color: #FFD700; }
         
-        /* 3D Spin Wheel Styling */
-        #wheel-container { position: relative; width: 320px; height: 320px; margin: 0 auto; perspective: 1000px; }
-        #wheel { width: 100%; height: 100%; border-radius: 50%; border: 10px solid #ffd700; transition: transform 6s cubic-bezier(0.1, 0, 0.1, 1); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
-        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 35px solid #ff0000; z-index: 50; }
-        
-        .particle { position: absolute; background: white; border-radius: 50%; opacity: 0.3; pointer-events: none; }
+        /* Spin Wheel */
+        #wheel-container { position: relative; width: 320px; height: 320px; margin: 0 auto; }
+        #wheel-canvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid #FFD700; transition: transform 6s cubic-bezier(0.15, 0, 0.1, 1); }
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #FF0000; z-index: 10; filter: drop-shadow(0 0 10px red); }
     </style>
 </head>
-<body>
+<body class="bg-gradient-to-b from-[#000428] to-[#001529] p-4 md:p-10">
 
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-4">
-        <div id="particles-js"></div>
-        <h1 id="entry-text" class="text-3xl md:text-6xl font-bold text-yellow-400 mb-4 opacity-0 scale-50">
-            🎉 আপনাকে আন্তরিক ধন্যবাদ এবং অভিনন্দন <br>
-            <span class="text-white text-2xl md:text-4xl">আপনার গুরুত্বপূর্ণ ডকুমেন্ট গ্রহণ করার জন্য</span>
-        </h1>
-        <p id="entry-sub" class="text-lg text-blue-200 mt-4 max-w-2xl opacity-0">
-            আমাদের নীতিমালা অনুযায়ী, আমরা আমাদের সম্মানিত সাংবাদিক সদস্যদের জন্য বিশেষ পুরস্কার বিতরণ করছি।
-        </p>
+    <header class="text-center py-12">
+        <h1 id="main-title" class="text-4xl md:text-6xl font-black neon-text mb-4 opacity-0">🎉 আন্তরিক ধন্যবাদ ও অভিনন্দন</h1>
+        <p id="sub-title" class="text-xl text-gray-300 opacity-0 italic">আপনার গুরুত্বপূর্ণ ডকুমেন্ট সফলভাবে গৃহীত হয়েছে।</p>
+    </header>
+
+    <section class="max-w-4xl mx-auto glass-card p-10 text-center mb-16 border-2 border-yellow-600/30">
+        <h2 class="text-3xl font-bold text-yellow-500 mb-8 uppercase tracking-widest">আপনার নিশ্চিত উপহার জিতে নিন</h2>
         
-        <div class="mt-10 opacity-0" id="video-btn">
-            <a href="https://wa.me/8801328627572?text=আমি%20জানতে%20চাই%20কিভাবে%20সংবাদ%20আপলোড%20করব" 
-               class="bg-gradient-to-r from-green-600 to-green-400 hover:scale-110 transition p-4 rounded-full font-bold shadow-lg flex items-center gap-3">
-               🎥 কিভাবে সংবাদ আপলোড করবেন – ভিডিও দেখুন
-            </a>
+        <div id="wheel-container" class="mb-8">
+            <div class="pointer"></div>
+            <canvas id="wheel-canvas" width="500" height="500"></canvas>
         </div>
+
+        <button onclick="spinWheel()" id="spin-btn" class="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-12 py-5 rounded-2xl font-black text-3xl shadow-2xl hover:scale-105 transition active:scale-95">
+            SPIN NOW
+        </button>
+        <p class="mt-6 text-gray-400">"সম্মানিত সাংবাদিক সদস্যদের জন্য একটি নিশ্চিত টি-শার্ট উপহার"</p>
     </section>
 
-    <section class="py-20 bg-black/40 relative">
-        <div class="max-w-4xl mx-auto text-center px-6">
-            <h2 class="text-4xl font-black mb-12 text-yellow-500 uppercase tracking-widest">মেগা লাকি স্পিন</h2>
-            
-            <div id="wheel-container" class="mb-12">
-                <div class="pointer"></div>
-                <img src="https://i.ibb.co/L5h9pYm/Untitled-design-2.png" id="wheel" alt="3D Spin Wheel">
-            </div>
-
-            <button onclick="spinWheel()" id="spin-btn" class="bg-yellow-500 text-black px-12 py-5 rounded-2xl font-black text-3xl shadow-[0_0_50px_rgba(255,215,0,0.4)] hover:bg-white transition-all active:scale-95">
-                স্পিন করুন
-            </button>
-            <p class="mt-8 text-xl italic text-gray-300 animate-pulse">“প্রতিটি অংশগ্রহণকারী নিশ্চিতভাবে একটি টি-শার্ট পাবেন”</p>
+    <section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">👤</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">প্রতিনিধি লগইন</h3>
+            <button onclick="toWA('আমি প্রতিনিধি একাউন্টে লগইন করতে চাই।')" class="w-full bg-blue-600 py-3 rounded-lg font-bold hover:bg-blue-700">এখনই লগইন করুন</button>
         </div>
+
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">🎥</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">ভিডিও সংবাদ আপলোড</h3>
+            <button onclick="toWA('আমি ভিডিও সংবাদ আপলোড করতে চাই।')" class="w-full bg-red-600 py-3 rounded-lg font-bold hover:bg-red-700">সংবাদ পাঠান</button>
+        </div>
+
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">🆔</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">অটো আইডি কার্ড তৈরি</h3>
+            <button onclick="toWA('আমি আমার অটো আইডি কার্ড তৈরি করতে চাই।')" class="w-full bg-purple-600 py-3 rounded-lg font-bold hover:bg-purple-700">আইডি কার্ড তৈরি করুন</button>
+        </div>
+
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">📜</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">অটো সার্টিফিকেট</h3>
+            <button onclick="toWA('আমি আমার অটো সার্টিফিকেট গ্রহণ করতে চাই।')" class="w-full bg-orange-600 py-3 rounded-lg font-bold hover:bg-orange-700">সার্টিফিকেট নিন</button>
+        </div>
+
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">✅</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">তথ্য যাচাই করুন</h3>
+            <button onclick="toWA('আমি আমার তথ্য যাচাই (Verify) করতে চাই।')" class="w-full bg-teal-600 py-3 rounded-lg font-bold hover:bg-teal-700">যাচাই শুরু করুন</button>
+        </div>
+
+        <div class="glass-card p-8 text-center group">
+            <div class="text-5xl mb-4 group-hover:scale-110 transition">💬</div>
+            <h3 class="text-xl font-bold text-yellow-400 mb-4">হেল্প ডেস্ক</h3>
+            <button onclick="toWA('আমার জরুরি সহযোগিতা প্রয়োজন।')" class="w-full bg-green-600 py-3 rounded-lg font-bold hover:bg-green-700">সরাসরি কথা বলুন</button>
+        </div>
+
     </section>
 
-    <div id="win-modal" class="fixed inset-0 bg-black/95 z-[100] hidden flex items-center justify-center p-6">
-        <div class="glass p-10 rounded-3xl text-center border-2 border-yellow-400 max-w-sm">
-            <div class="text-6xl mb-4">🏆</div>
-            <h2 class="text-3xl font-bold text-yellow-400 mb-2">অভিনন্দন!</h2>
-            <p class="text-xl mb-6">আপনি একটি <span class="text-white font-bold underline">টি-শার্ট</span> বিজয়ী হয়েছেন!</p>
-            <button onclick="claimPrize()" class="bg-green-500 w-full py-4 rounded-xl font-bold text-xl hover:bg-green-600 shadow-xl shadow-green-500/20">আপনার তথ্য পাঠান (WhatsApp)</button>
+    <div id="win-modal" class="fixed inset-0 bg-black/95 flex items-center justify-center hidden z-[999] p-6">
+        <div class="glass-card p-10 text-center border-4 border-yellow-500 scale-95 animate-bounce">
+            <h2 class="text-4xl font-black text-yellow-400 mb-4">অভিনন্দন! 🎊</h2>
+            <p class="text-xl text-white mb-8">আপনি একটি <span class="font-bold underline">Premium T-Shirt</span> বিজয়ী হয়েছেন!</p>
+            <button onclick="toWA('আমি টি-শার্ট জিতেছি, আমার কুরিয়ার ঠিকানা দিতে চাই।')" class="bg-green-500 px-10 py-4 rounded-xl font-bold text-xl shadow-lg hover:bg-green-600">উপহারটি সংগ্রহ করুন (WhatsApp)</button>
         </div>
     </div>
 
-    <section class="py-20 max-w-6xl mx-auto px-6">
-        <h3 class="text-center text-3xl font-bold mb-16 text-blue-400">🚀 আমাদের স্পেশাল ফিচারসমূহ</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div class="glass p-8 rounded-2xl group hover:neon-glow transition-all duration-500 transform hover:-translate-y-4">
-                <div class="text-5xl mb-4">🆔</div>
-                <h4 class="text-xl font-bold text-yellow-500 mb-2">Auto ID Card</h4>
-                <p class="text-sm text-gray-400 italic">স্মার্ট কিউআর কোড যুক্ত সাংবাদিক আইডি কার্ড যা অটোমেটিক জেনারেট হবে।</p>
-            </div>
-            <div class="glass p-8 rounded-2xl group hover:neon-glow transition-all duration-500 transform hover:-translate-y-4">
-                <div class="text-5xl mb-4">💰</div>
-                <h4 class="text-xl font-bold text-yellow-500 mb-2">Payment Plans</h4>
-                <p class="text-sm text-gray-400 italic">আপনার সংবাদের গুরুত্ব অনুযায়ী আকর্ষণীয় বেতন ও বোনাস সুবিধা।</p>
-            </div>
-            <div class="glass p-8 rounded-2xl group hover:neon-glow transition-all duration-500 transform hover:-translate-y-4">
-                <div class="text-5xl mb-4">🎥</div>
-                <h4 class="text-xl font-bold text-yellow-500 mb-2">Live News</h4>
-                <p class="text-sm text-gray-400 italic">খুব শীঘ্রই সরাসরি ভিডিও রিপোর্ট আপলোড করার প্লাটফর্ম আসছে।</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-20 text-center border-t border-white/10">
-        <div class="inline-block">
-            <h4 class="typing-effect text-xl text-yellow-400 font-bold">🚀 খুব শীঘ্রই আসছে: লাইভ ভিডিও নিউজ | আকর্ষণীয় বেতন সুবিধা | ডিরেক্টরি</h4>
-        </div>
-        <div class="mt-10 text-gray-500 text-sm">
-            © 2026 সাংবাদিক কমিউনিটি | সঠিক তথ্য দিয়ে পুরস্কার নিশ্চিত করুন।
-        </div>
-    </footer>
-
     <script>
-        // 1. Initial Animations (GSAP)
-        window.onload = () => {
-            gsap.to("#entry-text", { opacity: 1, scale: 1, duration: 1.5, ease: "back.out(1.7)" });
-            gsap.to("#entry-sub", { opacity: 1, y: -10, duration: 1, delay: 0.8 });
-            gsap.to("#video-btn", { opacity: 1, duration: 1, delay: 1.2 });
-        };
+        // 1. Entry Animations
+        gsap.to("#main-title", { opacity: 1, y: 20, duration: 1.2 });
+        gsap.to("#sub-title", { opacity: 1, y: 20, duration: 1.2, delay: 0.4 });
 
-        // 2. Spin Wheel Logic (Rigged to T-Shirt)
-        let spinning = false;
+        // 2. Custom Canvas Wheel
+        const canvas = document.getElementById('wheel-canvas');
+        const ctx = canvas.getContext('2d');
+        const sectors = [
+            { label: "T-Shirt", color: "#FFD700", icon: "👕" },
+            { label: "Mobile", color: "#222", icon: "📱" },
+            { label: "Gift Box", color: "#333", icon: "🎁" },
+            { label: "Reward", color: "#222", icon: "✨" },
+            { label: "Surprise", color: "#333", icon: "🎊" },
+            { label: "Bonus", color: "#222", icon: "🎉" }
+        ];
+
+        const arc = (2 * Math.PI) / sectors.length;
+        function drawWheel() {
+            sectors.forEach((s, i) => {
+                const angle = i * arc;
+                ctx.beginPath(); ctx.fillStyle = s.color; ctx.moveTo(250, 250); ctx.arc(250, 250, 240, angle, angle + arc); ctx.fill(); ctx.stroke();
+                ctx.save(); ctx.translate(250, 250); ctx.rotate(angle + arc / 2); ctx.textAlign = "right";
+                ctx.fillStyle = i === 0 ? "black" : "white"; ctx.font = "bold 22px Hind Siliguri";
+                ctx.fillText(s.icon + " " + s.label, 220, 10); ctx.restore();
+            });
+        }
+        drawWheel();
+
+        // 3. Spin Logic (Always T-Shirt)
+        let isSpinning = false;
         function spinWheel() {
-            if (spinning) return;
-            spinning = true;
-            
-            const wheel = document.getElementById('wheel');
-            const btn = document.getElementById('spin-btn');
-            btn.disabled = true;
-            btn.innerText = "ঘুরছে...";
-
-            // লজিক: ৩৬০ ডিগ্রি রোটেশন করে এমনভাবে থামবে যেন T-Shirt ই আসে।
-            // ১০ বার পূর্ণ ঘূর্ণন (360 * 10) + নির্দিষ্ট অ্যাঙ্গেল (ধরি T-Shirt ০ ডিগ্রিতে)
-            const finalRotation = (360 * 10) + 0; 
-            wheel.style.transform = `rotate(${finalRotation}deg)`;
+            if (isSpinning) return;
+            isSpinning = true;
+            document.getElementById('spin-btn').innerText = "ঘুরছে...";
+            const wheel = document.getElementById('wheel-canvas');
+            const totalRotation = (360 * 10) + 0; // ১০ বার ঘুরে ০ ডিগ্রিতে (T-shirt) থামবে
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
 
             setTimeout(() => {
-                // Winning Animation
-                confetti({
-                    particleCount: 200,
-                    spread: 90,
-                    origin: { y: 0.6 },
-                    colors: ['#ffd700', '#ffffff', '#ff0000']
-                });
-                
-                // Show Popup
-                setTimeout(() => {
-                    document.getElementById('win-modal').classList.remove('hidden');
-                }, 1000);
-            }, 6000);
+                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                document.getElementById('win-modal').classList.remove('hidden');
+            }, 6200);
         }
 
-        // 3. WhatsApp Redirect
-        function claimPrize() {
-            const phoneNumber = "8801328627572";
-            const text = "আমি টি-শার্ট জিতেছি, আমার কুরিয়ার ঠিকানা দিতে চাই।";
-            window.location.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
-        }
-
-        // Particle background effects
-        for(let i=0; i<30; i++) {
-            let p = document.createElement('div');
-            p.className = 'particle';
-            let size = Math.random() * 5 + 'px';
-            p.style.width = size;
-            p.style.height = size;
-            p.style.top = Math.random() * 100 + 'vh';
-            p.style.left = Math.random() * 100 + 'vw';
-            document.body.appendChild(p);
-            
-            gsap.to(p, {
-                y: "-=100",
-                opacity: 0,
-                duration: Math.random() * 3 + 2,
-                repeat: -1,
-                ease: "none"
-            });
+        // 4. Global WhatsApp Redirect Function
+        function toWA(customMsg) {
+            const phone = "8801328627572";
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(customMsg)}`;
+            window.location.href = url;
         }
     </script>
 </body>
